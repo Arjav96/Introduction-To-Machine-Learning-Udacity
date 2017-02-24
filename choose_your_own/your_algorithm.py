@@ -1,0 +1,176 @@
+#!/usr/bin/python
+
+import matplotlib.pyplot as plt
+from prep_terrain_data import makeTerrainData
+from class_vis import prettyPicture
+
+features_train, labels_train, features_test, labels_test = makeTerrainData()
+
+
+### the training data (features_train, labels_train) have both "fast" and "slow"
+### points mixed together--separate them so we can give them different colors
+### in the scatterplot and identify them visually
+grade_fast = [features_train[ii][0] for ii in range(0, len(features_train)) if labels_train[ii]==0]
+bumpy_fast = [features_train[ii][1] for ii in range(0, len(features_train)) if labels_train[ii]==0]
+grade_slow = [features_train[ii][0] for ii in range(0, len(features_train)) if labels_train[ii]==1]
+bumpy_slow = [features_train[ii][1] for ii in range(0, len(features_train)) if labels_train[ii]==1]
+
+
+#### initial visualization
+plt.xlim(0.0, 1.0)
+plt.ylim(0.0, 1.0)
+plt.scatter(bumpy_fast, grade_fast, color = "b", label="fast")
+plt.scatter(grade_slow, bumpy_slow, color = "r", label="slow")
+plt.legend()
+plt.xlabel("bumpiness")
+plt.ylabel("grade")
+plt.show()
+################################################################################
+
+
+### your code here!  name your classifier object clf if you want the 
+### visualization code (prettyPicture) to show you the decision boundary
+
+
+#print "no of training eg: ",len(features_train)
+
+
+##################   Naive_bayes
+from sklearn.naive_bayes import GaussianNB as NB
+clf = NB()
+
+clf.fit(features_train,labels_train)
+
+pred = clf.predict(features_test)
+
+
+from sklearn.metrics import accuracy_score as ac
+
+accuracy = ac(labels_test,pred)
+
+print "accuracy: ",accuracy
+#accuracy = 88.4%
+
+
+##################   Support Vector Machines
+from sklearn.svm import SVC
+clf = SVC(C=1000000.0)
+clf.fit(features_train,labels_train)
+
+pred = clf.predict(features_test)
+
+
+from sklearn.metrics import accuracy_score as ac
+
+accuracy = ac(labels_test,pred)
+
+print "accuracy: ",accuracy
+#accuracy = 92% with default C
+#accuracy = 94.8% with C = 1000000.0
+
+
+
+##################   Decision Trees
+from sklearn.tree import DecisionTreeClassifier as DTC
+clf = DTC()
+
+clf.fit(features_train,labels_train)
+
+pred = clf.predict(features_test)
+
+
+from sklearn.metrics import accuracy_score as ac
+
+accuracy = ac(labels_test,pred)
+
+print "accuracy: ",accuracy
+#accuracy = 90.8%
+
+
+
+#################    kNN (K nearest neighbours)
+from sklearn.neighbors import KNeighborsClassifier as kNN
+
+clf = kNN(n_neighbors=1) 
+
+clf.fit(features_train,labels_train)
+
+pred = clf.predict(features_test)
+
+
+from sklearn.metrics import accuracy_score as ac
+
+accuracy = ac(labels_test,pred)
+
+print "accuracy: ",accuracy
+#accuracy = 93.6% (n_neighbors=3)
+#accuracy = 94% (n_neighbors=1)
+
+
+
+#################    Random Forests (bagging Ensemble methods)
+from sklearn.ensemble import RandomForestClassifier as RFC
+
+clf = RFC(n_estimators=10, max_depth=None, min_samples_split=2,max_features=0.90, random_state=0)
+
+clf.fit(features_train,labels_train)
+
+pred = clf.predict(features_test)
+
+
+from sklearn.metrics import accuracy_score as ac
+
+accuracy = ac(labels_test,pred)
+
+print "accuracy: ",accuracy
+#accuracy = 92.4%
+
+
+
+##############      Extra Trees
+
+from sklearn.ensemble import ExtraTreesClassifier as ETC
+
+clf = ETC(n_estimators=10, max_depth=None, min_samples_split=2, random_state=0)
+
+
+clf.fit(features_train,labels_train)
+
+pred = clf.predict(features_test)
+
+
+from sklearn.metrics import accuracy_score as ac
+
+accuracy = ac(labels_test,pred)
+
+print "accuracy: ",accuracy
+#accuracy = 85.6%
+
+
+
+
+####################      AdaBoost (Boosting Ensemble methods)
+from sklearn.ensemble import AdaBoostClassifier as ABC
+
+clf = ABC(n_estimators=100)
+
+clf.fit(features_train,labels_train)
+
+pred = clf.predict(features_test)
+
+
+from sklearn.metrics import accuracy_score as ac
+
+accuracy = ac(labels_test,pred)
+
+print "accuracy: ",accuracy
+#accuracy = 92.4% 
+
+
+
+
+
+try:
+    prettyPicture(clf, features_test, labels_test)
+except NameError:
+    pass

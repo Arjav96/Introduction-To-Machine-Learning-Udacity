@@ -1,0 +1,15 @@
+# kNN (K nearest neighbours)
+from sklearn.neighbors import KNeighborsClassifier as kNN
+
+clf = kNN(n_neighbors=3) 
+
+clf.fit(features_train,labels_train)
+
+pred = clf.predict(features_test)
+
+
+from sklearn.metrics import accuracy_score as ac
+
+accuracy = ac(labels_test,pred)
+
+print "accuracy: ",accuracy

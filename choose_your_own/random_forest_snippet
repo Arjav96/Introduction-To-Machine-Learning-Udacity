@@ -1,0 +1,15 @@
+# Random Forests (bagging Ensemble methods)
+from sklearn.ensemble import RandomForestClassifier as RFC
+
+clf = RFC(n_estimators=10, max_depth=None, min_samples_split=2,max_features=0.90, random_state=0)
+
+clf.fit(features_train,labels_train)
+
+pred = clf.predict(features_test)
+
+
+from sklearn.metrics import accuracy_score as ac
+
+accuracy = ac(labels_test,pred)
+
+print "accuracy: ",accuracy
